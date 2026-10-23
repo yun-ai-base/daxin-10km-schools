@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大新站 10km 半径 · 初高中学校全景统计</title>
+<style>
+  :root{
+    --bg:#eef1f5;
+    --card:#ffffff;
+    --ink:#16202b;
+    --ink-2:#4a5a6a;
+    --ink-3:#8593a3;
+    --line:#e2e7ee;
+    --brand:#0b3a53;
+    --brand-2:#12556f;
+    --accent:#1f7ae0;
+    --jhs:#1f7ae0;      /* 初中 */
+    --shs:#7b4ff2;      /* 高中 */
+    --bth:#0e9c8a;      /* 完中 */
+    --ns:#1f7ae0;
+    --ba:#e8873a;
+    --warn:#b8860b;
+    --shadow:0 1px 2px rgba(16,32,48,.06), 0 8px 24px -12px rgba(16,32,48,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:
+      radial-gradient(circle at 12% 0%, #dfe9f5 0%, transparent 42%),
+      radial-gradient(circle at 88% 8%, #e6f0ec 0%, transparent 38%),
+      var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#082f45 0%,#0b3a53 45%,#0f5168 100%);
+    color:#fff;padding:56px 0 48px;
+    border-radius:0 0 28px 28px;
+  }
+  .hero::after{
+    content:"";position:absolute;right:-140px;top:-140px;width:520px;height:520px;
+    background:radial-gradient(circle,rgba(80,190,220,.30),transparent 62%);
+    border-radius:50%;
+  }
+  .hero::before{
+    content:"";position:absolute;left:0;bottom:0;width:100%;height:100%;
+    background-image:radial-gradient(rgba(255,255,255,.16) 1px, transparent 1px);
+    background-size:26px 26px;opacity:.35;
+    mask-image:linear-gradient(to top, rgba(0,0,0,.9), transparent 70%);
+  }
+  .hero-inner{position:relative;z-index:2}
+  .tagline{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:#9fd4e6;border:1px solid rgba(159,212,230,.32);
+    padding:5px 12px;border-radius:99px;margin-bottom:20px;
+  }
+  .tagline i{width:6px;height:6px;border-radius:50%;background:#6fd0c4;display:block}
+  h1{font-size:clamp(26px,3.4vw,42px);line-height:1.24;font-weight:700;letter-spacing:-.5px}
+  h1 em{font-style:normal;color:#7fe0d0}
+  .hero p.lead{margin-top:14px;max-width:760px;color:#c3dae4;font-size:15.5px}
+  .hero-stats{display:flex;flex-wrap:wrap;gap:38px;margin-top:36px}
+  .hero-stats div span{display:block;font-size:12px;color:#8fb6c6;letter-spacing:.1em;margin-bottom:4px}
+  .hero-stats div b{font-size:30px;font-weight:700;letter-spacing:-.5px}
+  .hero-stats div b i{font-size:15px;font-weight:500;font-style:normal;color:#9fd4e6;margin-left:3px}
+
+  /* ---------- 通用卡片 ---------- */
+  section{margin-top:34px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:26px 26px 22px;
+  }
+  .card-h{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+  .card-h h2{font-size:17.5px;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:9px}
+  .card-h h2::before{content:"";width:4px;height:16px;border-radius:2px;background:linear-gradient(#1f7ae0,#0e9c8a)}
+  .card-h .sub{font-size:12.5px;color:var(--ink-3);margin-top:3px;font-weight:400}
+  .hint{font-size:12px;color:var(--ink-3)}
+
+  /* ---------- 提示条 ---------- */
+  .notice{
+    display:flex;gap:14px;align-items:flex-start;
+    background:linear-gradient(180deg,#fff9e8,#fffdf6);
+    border:1px solid #f0e0b0;border-left:4px solid #e0b64a;
+    border-radius:12px;padding:16px 18px;margin-top:26px;font-size:13.5px;color:#5a4a1e;
+  }
+  .notice b{color:#8a6a12}
+  .notice .ico{font-size:16px;line-height:1.4}
+
+  /* ---------- KPI ---------- */
+  .kpi{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:26px}
+  .kpi .k{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  .kpi .k::after{content:"";position:absolute;left:0;top:0;width:100%;height:3px;background:var(--c,#1f7ae0)}
+  .kpi .k span{font-size:12px;color:var(--ink-3);display:block;margin-bottom:6px}
+  .kpi .k b{font-size:26px;font-weight:700;letter-spacing:-.6px}
+  .kpi .k b i{font-size:12.5px;font-style:normal;font-weight:500;color:var(--ink-3);margin-left:2px}
+  .kpi .k p{font-size:11.5px;color:var(--ink-3);margin-top:4px}
+
+  /* ---------- 布局 ---------- */
+  .grid-2{display:grid;grid-template-columns:1.25fr .75fr;gap:20px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .grid-2even{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+  /* ---------- 散点地图 ---------- */
+  .map-box{position:relative}
+  svg#radar{display:block;width:100%;height:auto;overflow:visible}
+  .map-tip{
+    position:absolute;pointer-events:none;background:#0b2534;color:#fff;
+    font-size:12px;padding:7px 10px;border-radius:8px;white-space:nowrap;
+    transform:translate(-50%,-134%);opacity:0;transition:opacity .12s;z-index:9;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+  }
+  .map-tip b{font-weight:600}
+  .map-tip span{color:#9fd4e6}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12.5px;color:var(--ink-2)}
+  .legend i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle}
+
+  /* ---------- 条形图 ---------- */
+  .bars{display:flex;flex-direction:column;gap:2px}
+  .bar-row{display:grid;grid-template-columns:var(--lw,150px) 1fr 52px;align-items:center;gap:12px;padding:6px 0}
+  .bar-row .lab{font-size:12.5px;color:var(--ink-2);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar-track{height:20px;background:#f0f3f7;border-radius:6px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;border-radius:6px;transition:width .7s cubic-bezier(.2,.8,.2,1);width:0}
+  .bar-row .val{font-size:12.5px;font-weight:600;color:var(--ink);text-align:right}
+  .bar-row .val i{font-style:normal;color:var(--ink-3);font-weight:400}
+
+  /* ---------- 关键发现 ---------- */
+  .find-list{list-style:none;counter-reset:f;display:grid;gap:13px}
+  .find-list li{counter-increment:f;position:relative;padding-left:40px;font-size:13.5px;color:var(--ink-2);line-height:1.72}
+  .find-list li::before{
+    content:counter(f,decimal-leading-zero);position:absolute;left:0;top:2px;
+    font-size:11px;font-weight:700;color:#fff;letter-spacing:.02em;
+    background:linear-gradient(135deg,#0b3a53,#1f7ae0);
+    width:27px;height:27px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 3px 8px -2px rgba(11,58,83,.4);
+  }
+  .find-list li b{color:var(--ink);font-weight:600}
+
+  /* ---------- 圈层速览 ---------- */
+  .band-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .band{background:#fafbfd;border:1px solid var(--line);border-radius:12px;padding:15px 15px 13px}
+  .band-h{display:flex;justify-content:space-between;align-items:baseline}
+  .band-h b{font-size:13.5px;font-weight:700;letter-spacing:-.2px}
+  .band-h span{font-size:11.5px;color:var(--ink-3)}
+  .band-sub{font-size:11.5px;color:var(--ink-3);margin:2px 0 11px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{
+    display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:#fff;
+    border-radius:99px;padding:3px 9px 3px 7px;font:inherit;font-size:11.5px;color:var(--ink-2);
+    cursor:pointer;transition:.14s;
+  }
+  .chip:hover{border-color:#9dc7f2;background:#f4faff;color:var(--ink);transform:translateY(-1px)}
+  .chip i{width:5px;height:5px;border-radius:50%;flex:none}
+  .chip em{font-style:normal;color:var(--ink-3);font-size:10.5px;margin-left:1px}
+  .mini-legend{display:flex;gap:14px;font-size:12px;color:var(--ink-3);margin-bottom:12px}
+  .mini-legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px}
+
+  /* ---------- 数学补课视角 ---------- */
+  .exam-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+  .exam{
+    border:1px solid var(--line);border-radius:12px;padding:15px 16px;
+    background:linear-gradient(180deg,#fbfdff,#f4f8fc);
+  }
+  .exam .k{font-size:11.5px;color:var(--ink-3);letter-spacing:.02em}
+  .exam .v{font-size:24px;font-weight:700;letter-spacing:-.8px;margin:5px 0 7px;color:#0b3a53}
+  .exam .v i{font-size:12px;font-weight:500;font-style:normal;color:var(--ink-3);margin-left:3px}
+  .exam p{font-size:11.5px;color:var(--ink-2);line-height:1.6}
+  .exam p b{color:#c0392b}
+
+  .tier-grid{display:grid;gap:12px}
+  .tier{
+    display:grid;grid-template-columns:92px 1fr;gap:18px;
+    border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    background:#fcfdfe;position:relative;overflow:hidden;
+  }
+  .tier::before{content:"";position:absolute;left:0;top:0;width:4px;height:100%;background:var(--tc)}
+  .tier-left{text-align:center;padding-right:16px;border-right:1px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .tier-badge{
+    width:46px;height:46px;border-radius:13px;background:var(--tc);color:#fff;
+    font-size:21px;font-weight:800;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 14px -6px var(--tc);
+  }
+  .tier-lv{font-size:11px;color:var(--ink-3);margin-top:8px;letter-spacing:.02em}
+  .tier-count{font-size:23px;font-weight:700;letter-spacing:-.5px;margin-top:2px;color:var(--tc)}
+  .tier-count i{font-size:11px;font-style:normal;color:var(--ink-3);margin-left:1px;font-weight:400}
+  .tier-body h4{font-size:14.5px;font-weight:700;letter-spacing:-.2px}
+  .tier-who{font-size:12.5px;color:var(--ink-3);margin:3px 0 11px}
+  .tier-fields{display:grid;gap:6px;margin-bottom:12px}
+  .tier-fields div{display:grid;grid-template-columns:84px 1fr;gap:10px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
+  .tier-fields b{color:var(--ink);font-weight:600;font-size:12px}
+  .tier-body .chip{font-size:11px;padding:3px 8px 3px 6px}
+  .chip-more{font-size:11.5px;color:var(--ink-3);align-self:center;padding-left:2px}
+  .btn.sm{padding:5px 12px;font-size:12px;margin-top:13px}
+
+  .pool-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+    margin-top:22px;padding-top:20px;border-top:1px dashed var(--line);
+  }
+  .pool{background:#fafbfd;border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+  .pool-v{font-size:23px;font-weight:700;letter-spacing:-.6px;color:#0b3a53}
+  .pool-v i{font-size:11.5px;font-style:normal;color:var(--ink-3);margin-left:2px;font-weight:500}
+  .pool-t{font-size:12.5px;font-weight:600;margin-top:1px}
+  .pool-p{font-size:11.5px;color:var(--ink-3);margin-top:3px;line-height:1.55}
+
+  #calendar{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+  .cal{border-left:3px solid var(--cc);background:#fafbfd;border-radius:0 10px 10px 0;padding:11px 12px}
+  .cal-m{font-size:12px;font-weight:700;color:var(--cc)}
+  .cal-t{font-size:12.5px;font-weight:600;margin:2px 0 3px}
+  .cal-d{font-size:11.5px;color:var(--ink-3);line-height:1.55}
+
+  /* 官网外链小按钮 */
+  .ext{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:16px;height:16px;border-radius:5px;font-size:10px;line-height:1;
+    color:var(--ink-3);background:#eef2f7;text-decoration:none;flex:none;
+    transition:.14s;font-weight:700;
+  }
+  .ext:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+  .pill.tb{font-weight:600}
+  .tel{color:var(--ink);text-decoration:none;font-variant-numeric:tabular-nums;border-bottom:1px dotted #b9c6d2}
+  .tel:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .wx{color:var(--accent);text-decoration:none;border-bottom:1px dotted #9dc7f2}
+  .wx:hover{border-bottom-style:solid}
+
+  /* ---------- 表格 ---------- */
+  .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+  .fgroup{display:flex;background:#f2f5f9;border-radius:10px;padding:3px}
+  .fgroup button{
+    border:0;background:transparent;font:inherit;font-size:12.5px;color:var(--ink-2);
+    padding:6px 13px;border-radius:8px;cursor:pointer;transition:.15s;white-space:nowrap;
+  }
+  .fgroup button:hover{color:var(--ink)}
+  .fgroup button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(16,32,48,.14);font-weight:600}
+  .search{
+    flex:1;min-width:180px;display:flex;align-items:center;gap:8px;
+    background:#f2f5f9;border-radius:10px;padding:7px 12px;
+  }
+  .search input{border:0;background:transparent;font:inherit;font-size:13px;outline:none;width:100%;color:var(--ink)}
+  .search svg{flex:none;opacity:.45}
+  .count-pill{font-size:12px;color:var(--ink-3);margin-left:auto}
+  .count-pill b{color:var(--ink);font-size:13px}
+
+  .table-scroll{max-height:620px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{
+    position:sticky;top:0;background:#f7f9fc;z-index:2;text-align:left;
+    font-size:11.5px;font-weight:600;color:var(--ink-3);letter-spacing:.04em;
+    padding:11px 12px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;
+  }
+  thead th:hover{color:var(--ink)}
+  thead th.sorted{color:var(--accent)}
+  tbody td{padding:10px 12px;border-bottom:1px solid #f1f4f8;vertical-align:middle}
+  tbody tr{cursor:pointer;transition:background .12s}
+  tbody tr:hover{background:#f7fbff}
+  tbody tr.open{background:#f2f9ff}
+  .sname{font-weight:600;color:var(--ink);display:flex;align-items:center;gap:7px}
+  .sname .dot{width:7px;height:7px;border-radius:50%;flex:none}
+  .sname small{font-weight:400;color:var(--ink-3);font-size:11.5px;margin-left:2px}
+  .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;font-weight:500;white-space:nowrap}
+  .pill.j{background:#e8f1fd;color:#1463ba}
+  .pill.s{background:#efe9fe;color:#5b32cf}
+  .pill.b{background:#e2f6f2;color:#0a7a6b}
+  .pill.pub{background:#eef2f7;color:#44566b}
+  .pill.priv{background:#fdf0e6;color:#a4632a}
+  .pill.ns{background:#e8f1fd;color:#1463ba}
+  .pill.ba{background:#fdf0e6;color:#a4632a}
+  .dist-cell{font-weight:600}
+  .dist-cell i{font-style:normal;font-size:11px;color:var(--ink-3);font-weight:400;margin-left:4px}
+  .muted{color:var(--ink-3)}
+  .detail-row td{background:#f7fbff;padding:0;border-bottom:1px solid #e6eef7}
+  .detail-inner{padding:14px 18px 16px 32px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px 24px;font-size:12.5px;color:var(--ink-2)}
+  .detail-inner div b{color:var(--ink);font-weight:600}
+  .detail-inner .full{grid-column:1/-1;color:var(--ink-2)}
+  .empty{padding:40px;text-align:center;color:var(--ink-3);font-size:13px}
+
+  /* ---------- 教师模块 ---------- */
+  .teach-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .teach-box{background:#fafbfd;border:1px solid var(--line);border-radius:12px;padding:18px}
+  .teach-box h3{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .teach-box ol,.teach-box ul{margin-left:18px;font-size:13px;color:var(--ink-2)}
+  .teach-box li{margin-bottom:7px}
+  .teach-box li b{color:var(--ink)}
+  .bad{color:#b23b3b;font-weight:600}
+  .tmpl-toolbar{display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px;flex-wrap:wrap;gap:10px}
+  .tmpl-toolbar p{font-size:12.5px;color:var(--ink-3)}
+  .btn{
+    border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 14px;
+    font:inherit;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;
+    box-shadow:0 1px 2px rgba(16,32,48,.06);transition:.15s;
+  }
+  .btn:hover{border-color:#c9d6e3;background:#f9fbfd}
+  .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .btn.primary:hover{background:var(--brand-2)}
+  .tmpl-wrap{border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:320px}
+  table.tmpl{font-size:12px}
+  table.tmpl th{cursor:default;background:#f7f9fc}
+  table.tmpl td{padding:6px 8px}
+  table.tmpl input,table.tmpl select{
+    width:100%;border:1px solid transparent;background:transparent;font:inherit;font-size:12px;
+    padding:4px 6px;border-radius:6px;color:var(--ink);outline:none;
+  }
+  table.tmpl input:focus,table.tmpl select:focus{border-color:#9dc7f2;background:#fff}
+
+  /* ---------- 来源 ---------- */
+  .src-list{font-size:12.5px;color:var(--ink-2);line-height:1.9}
+  .src-list b{color:var(--ink)}
+  .src-list a{color:var(--accent);text-decoration:none;border-bottom:1px dotted #9dc7f2}
+  .src-list a:hover{border-bottom-style:solid}
+  footer{margin:44px 0 40px;text-align:center;font-size:12px;color:var(--ink-3)}
+
+  @media (max-width:1080px){
+    .kpi{grid-template-columns:repeat(3,1fr)}
+    .grid-3{grid-template-columns:1fr}
+    .grid-2,.grid-2even,.teach-grid{grid-template-columns:1fr}
+    .band-grid{grid-template-columns:repeat(2,1fr)}
+    .exam-cards{grid-template-columns:repeat(2,1fr)}
+    .pool-row{grid-template-columns:repeat(2,1fr)}
+    #calendar{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (max-width:640px){
+    .wrap{padding:0 14px}
+    .kpi{grid-template-columns:repeat(2,1fr)}
+    .card{padding:18px 16px}
+    .hero{padding:40px 0 34px;border-radius:0 0 20px 20px}
+    .hero-stats{gap:22px}
+    .hero-stats div b{font-size:24px}
+    .bar-row{grid-template-columns:96px 1fr 44px}
+    .detail-inner{grid-template-columns:1fr}
+    .table-scroll{max-height:520px}
+    .band-grid{grid-template-columns:1fr}
+    .exam-cards,.pool-row{grid-template-columns:1fr}
+    #calendar{grid-template-columns:repeat(2,1fr)}
+    .tier{grid-template-columns:1fr;gap:12px}
+    .tier-left{flex-direction:row;justify-content:flex-start;gap:10px;border-right:0;border-bottom:1px dashed var(--line);padding:0 0 10px}
+    .tier-badge{width:34px;height:34px;font-size:16px;border-radius:10px}
+    .tier-lv{margin-top:0}
+    .tier-count{margin-top:0;margin-left:auto;font-size:19px}
+    .tier-fields div{grid-template-columns:70px 1fr}
+  }
+  @media print{
+    body{background:#fff}
+    .hero{border-radius:0}
+    .card{break-inside:avoid;box-shadow:none}
+    .filters,.tmpl-toolbar .btn{display:none}
+    .table-scroll{max-height:none;overflow:visible}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-inner">
+    <div class="tagline"><i></i>深圳 · 南山区 · 大新地铁站</div>
+    <h1>半径 <em>10 公里</em> 内的初高中学校全景<br>数据统计与结构画像</h1>
+    <p class="lead">
+      以地铁 1 号线大新站（22.5352°N, 113.9104°E）为圆心，覆盖 <b id="hero-area">约 314</b> 平方公里的初中、完中、高中。
+      除了按学段 / 性质 / 集团 / 街道 / 距离五个维度做统计，这一版专门加了<b>数学补课视角</b>：考试分值结构、五层需求分层、每层的丢分点与可对接产品、学生池规模、全年收单窗口。
+    </p>
+    <div class="hero-stats">
+      <div><span>纳入统计学校</span><b class="num" id="h-total">—<i>所</i></b></div>
+      <div><span>涉及街道 / 片区</span><b class="num" id="h-street">—<i>个</i></b></div>
+      <div><span>高中招生计划合计</span><b class="num" id="h-enroll">—<i>人</i></b></div>
+      <div><span>1 公里内学校</span><b class="num" id="h-near">—<i>所</i></b></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="notice">
+    <div class="ico">⚠</div>
+    <div>
+      <b>先说清数据边界，避免误判。</b>
+      ① “每个年级、每个班级、各班班主任与数学老师姓名”属于校内人事信息，<b>没有任何公开的、可批量检索的数据源</b>——教育局只公开到「学校—学段—招生班数」这一层。本文档不编造这类字段，改为提供可落地的采集模板与合法获取路径（见文档末节）。
+      ② 距离为<b>校区坐标的大圆直线距离</b>，坐标精度为片区级（±0.8km），因此 9.5km 外的学校统一标记为「边缘带」，请以实际通勤为准。
+      ③ 招生班数仅少数学校公开到班，未公开的一律留空并标注，不用推测值填充。
+      ④ <b>「补课层级 S/A/B/C/D」是我的经验判断</b>，依据是公开分数线梯队、集团背景与生源结构，不是官方评级；官网一列仅 2 所收录到确认域名，其余为搜索直达；电话为学校公开办公电话，用于业务咨询，请勿用于其他用途。
+    </div>
+  </div>
+
+  <section class="kpi" id="kpi"></section>
+
+  <section class="card" style="margin-top:22px">
+    <div class="card-h">
+      <div>
+        <h2>关键发现</h2>
+        <div class="sub">从这 87 所学校的分布与规模里，能直接读出什么</div>
+      </div>
+      <div class="hint">全部基于本页数据计算</div>
+    </div>
+    <ol class="find-list">
+      <li><b>义务教育密度是普通高中的 5 倍以上。</b>87 所里 66 所是初中或九年一贯制，纯高中只有 12 所、完中 9 所。原因不是南山不爱办高中，而是高中面向全市统招且可寄宿，无需跟着居住密度铺点；初中按学区就近入学，学校必须贴着小区建。</li>
+      <li><b>2–4 公里才是真正的学校密集带。</b>站点 0–2km 只有 12 所（南头老城为主），2–4km 骤增到 24 所，覆盖粤海（科技园—后海）与新安（宝安中心—老城）。只盯"地铁口附近"会严重误判可选学区面。</li>
+      <li><b>公办占 80.5%，民办高度聚集在老城与工业带。</b>17 所民办中，西乡 4 所、新安 4 所、西丽 3 所，其余散在南头、前海、蛇口——全部落在租金低、外来人口密集的片区，与公办集团校形成清晰的空间分工。</li>
+      <li><b>集团化办学：四大集团拿走南山公办的近六成。</b>南山外国语 10 所、南山实验 8 所、蛇口育才 8 所、南二外 6 所，合计 32 所（占南山公办校 54 所中的 59%）；宝安则由宝安中学集团、新安中学集团各 3 所主导。</li>
+      <li><b>高中供给呈"宝安靠规模、南山靠分数线"的错位。</b>圈内 21 所高中 / 完中 2025 年高一计划合计 14,816 人，宝安片区 8,447 人（57%）、南山 6,369 人（43%）。宝安有 4 所超千人巨无霸（中澳 1,300、宝中 1,050、西乡 1,050、富源 1,000），南山则以 600–900 人的中型校为主。</li>
+      <li><b>地理边界很硬。</b>向东 10km 恰好抵达南山 / 福田交界（车公庙约 10.2km），所以本圈层不含任何福田学校；向北石岩（10.6km）已在圈外。"10 公里"在这里约等于"南山全域 + 宝安南部"。</li>
+    </ol>
+  </section>
+
+  <section class="card" style="margin-top:22px">
+    <div class="card-h">
+      <div>
+        <h2>数学补课视角 · 市场分层与打法</h2>
+        <div class="sub">这 87 所学校不是一个市场：谁会买、为什么买、卖什么，五层完全不同</div>
+      </div>
+      <div class="hint">分层为经验判断，非官方评级</div>
+    </div>
+
+    <div class="exam-cards" id="exam-cards"></div>
+    <div class="tier-grid" id="tier-grid"></div>
+    <div class="pool-row" id="pool-row"></div>
+  </section>
+
+  <section class="card" style="margin-top:20px">
+    <div class="card-h">
+      <div>
+        <h2>一年里的六个收单窗口</h2>
+        <div class="sub">深圳的考试节奏决定补课需求什么时候集中爆发</div>
+      </div>
+      <div class="hint">按 2026 年校历与中考日程</div>
+    </div>
+    <div id="calendar"></div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card map-box">
+      <div class="card-h">
+        <div>
+          <h2>10 公里圈层分布图</h2>
+          <div class="sub">以站点为原点的方位—距离散点，同心圆为 2 / 4 / 6 / 8 / 10 km</div>
+        </div>
+        <div class="hint">悬停查看 · 点击定位表格</div>
+      </div>
+      <svg id="radar" viewBox="0 0 760 760" role="img" aria-label="学校分布散点图"></svg>
+      <div class="map-tip" id="tip"></div>
+      <div class="legend">
+        <span><i style="background:#1f7ae0"></i>初中 / 九年一贯制</span>
+        <span><i style="background:#7b4ff2"></i>高中</span>
+        <span><i style="background:#0e9c8a"></i>完中（初+高同址）</span>
+        <span><i style="background:#fff;border:1.5px solid #9aa9b8"></i>民办（空心）</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <div>
+          <h2>圈层结构</h2>
+          <div class="sub">按直线距离分段统计</div>
+        </div>
+      </div>
+      <div class="bars" id="ring-bars"></div>
+      <div style="margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink-2);line-height:1.75">
+        <b style="color:var(--ink)">地理结论：</b>向东 10 公里恰好止步于南山与福田交界（车公庙约 10.2km、香蜜湖约 10.3km），
+        因此<b style="color:var(--ink)">本范围不含福田、罗湖任何学校</b>；向北越过宝安中心后，石岩（10.6km）已在圈外。
+        实际覆盖 = 南山区全域 + 宝安区新安 / 西乡 / 宝安中心片区。
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-3">
+    <div class="card">
+      <div class="card-h"><div><h2>街道 / 片区密度</h2><div class="sub">学校数量 Top 10</div></div></div>
+      <div class="bars" id="street-bars"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><h2>教育集团归属</h2><div class="sub">集团化办学集中度</div></div></div>
+      <div class="bars" id="group-bars"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><h2>办学性质 · 学段</h2><div class="sub">公办 / 民办 × 学段交叉</div></div></div>
+      <div class="bars" id="type-bars"></div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink-2)">
+        南山、宝安两区公办初中均以「集团化 + 大学区」为主要形态；民办主要集中在西丽、西乡、新安老城。
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-h">
+      <div>
+        <h2 id="bandTitle">圈层速览 · 每个距离带里有哪些学校</h2>
+        <div class="sub">按直线距离排序，括号内为公里数；点击任一标签可在下方总表中定位</div>
+      </div>
+      <div class="hint">渐变色由近及远</div>
+    </div>
+    <div class="band-grid" id="band-grid"></div>
+  </section>
+
+  <section class="card">
+    <div class="card-h">
+      <div>
+        <h2 id="enrollTitle">高中招生规模排行</h2>
+        <div class="sub">2025 年高一招生计划人数（官方计划表口径，仅列已公开学校）</div>
+      </div>
+      <div class="hint">单位：人 / 年</div>
+    </div>
+    <div class="mini-legend">
+      <span><i style="background:#1f7ae0"></i>南山区</span>
+      <span><i style="background:#e8873a"></i>宝安区</span>
+    </div>
+    <div class="bars" id="enroll-bars" style="--lw:230px"></div>
+      <div style="margin-top:14px;font-size:12px;color:var(--ink-3)">
+        按深圳高中班额约 45–50 人折算：招生 1000 人的学校，单个年级约 20–22 个班；规模最大的西乡中学、宝安中学（集团）高中部、深圳二高均为三个年级 60 个班以上的巨无霸。
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-h">
+      <div>
+        <h2>学校明细总表</h2>
+        <div class="sub">可筛选、搜索、排序；点击任意一行展开备注与班额结构推算</div>
+      </div>
+      <div class="count-pill">共 <b id="row-count">0</b> 所
+        <button class="btn sm" id="export-schools" style="margin-left:12px">导出当前筛选 CSV</button>
+      </div>
+    </div>
+
+    <div class="filters">
+      <div class="fgroup" data-f="seg">
+        <button class="on" data-v="all">全部学段</button>
+        <button data-v="初中">初中</button>
+        <button data-v="完中">完中</button>
+        <button data-v="高中">高中</button>
+      </div>
+      <div class="fgroup" data-f="tier">
+        <button class="on" data-v="all">全部层级</button>
+        <button data-v="S">S</button>
+        <button data-v="A">A</button>
+        <button data-v="B">B</button>
+        <button data-v="C">C</button>
+        <button data-v="D">D</button>
+      </div>
+      <div class="fgroup" data-f="type">
+        <button class="on" data-v="all">不限性质</button>
+        <button data-v="公办">公办</button>
+        <button data-v="民办">民办</button>
+      </div>
+      <div class="fgroup" data-f="d">
+        <button class="on" data-v="all">全部行政区</button>
+        <button data-v="南山区">南山区</button>
+        <button data-v="宝安区">宝安区</button>
+      </div>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+        </svg>
+        <input id="q" type="text" placeholder="搜索校名 / 集团 / 街道 / 片区…">
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th data-sort="name" style="width:30%">学校 <span class="arrow"></span></th>
+            <th data-sort="seg">学段 <span class="arrow"></span></th>
+            <th data-sort="tier">补课层级 <span class="arrow"></span></th>
+            <th data-sort="type">性质 <span class="arrow"></span></th>
+            <th data-sort="d">行政区 <span class="arrow"></span></th>
+            <th data-sort="street">街道 / 片区 <span class="arrow"></span></th>
+            <th data-sort="dist" class="sorted">直线距离 <span class="arrow">↑</span></th>
+            <th data-sort="enroll">2025 高一 <span class="arrow"></span></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" id="teacher">
+    <div class="card-h">
+      <div>
+        <h2>班级 / 班主任 / 数学老师：为什么拿不到，怎么拿到</h2>
+        <div class="sub">这一节是方法论 + 可交付工具，不是数据本身</div>
+      </div>
+    </div>
+
+    <div class="teach-grid">
+      <div class="teach-box">
+        <h3><span class="bad">✕</span> 三个客观障碍</h3>
+        <ol>
+          <li><b>不公开</b>：班级—教师对应关系属于校内人事安排，教育局公示文件只到「招生班数」层级，全国无公开数据库。</li>
+          <li><b>逐学期变动</b>：深圳初中普遍每学年重新分班，高一还会二次选科分班（如华侨城高级中学高一上、高一下各分一次），静态名单天然过期。</li>
+          <li><b>个人信息合规</b>：教师姓名+任教班级+联系方式组合起来属于个人信息，批量采集与二次分发需取得同意，公开网络上的零散名单不可靠也不宜汇总传播。</li>
+        </ol>
+        <p style="margin-top:10px;font-size:12.5px;color:var(--ink-2)">
+          能公开查到的只有<b>校级管理层</b>（书记 / 校长 / 分管教学副校长），例如华侨城高级中学校长余耀贤、北师大南山附校校长柴毅波、学府中学校长王宏、明远学校负责人林翠。
+        </p>
+      </div>
+
+      <div class="teach-box">
+        <h3><span style="color:#0a7a6b">✓</span> 四条合法获取路径</h3>
+        <ul>
+          <li><b>学校官网「教师风采 / 师资队伍」栏目</b>：多数南山公办校有，但只覆盖骨干教师，不含带班对应关系。</li>
+          <li><b>入学后的班级群 / 家长会</b>：唯一准确、及时、无合规风险的来源，开学两周内即可拿到完整班主任+科任表。</li>
+          <li><b>学校开放日与招生咨询</b>：可直接问「今年初一几个班、班额多少、是否平行分班」。</li>
+          <li><b>区教育局招生计划表</b>：能拿到刚性数据——招生班数、班额上限，用于推算总班数与教师需求量。</li>
+        </ul>
+        <p style="margin-top:10px;font-size:12.5px;color:var(--ink-2)">
+          下面这张表就是给这四条路径配套的采集模板：先选学校，再按年级/班级逐行填，导出的 CSV 可直接汇总。
+        </p>
+      </div>
+    </div>
+
+    <div class="tmpl-toolbar">
+      <p>采集模板 · 可直接在表格里录入（选择学校后自动带出学段与片区）</p>
+      <div style="display:flex;gap:8px">
+        <button class="btn" id="add-row">+ 添加一行</button>
+        <button class="btn primary" id="export-csv">导出 CSV</button>
+      </div>
+    </div>
+    <div class="tmpl-wrap">
+      <table class="tmpl">
+        <thead>
+          <tr>
+            <th style="width:24%">学校</th><th style="width:8%">年级</th><th style="width:8%">班级</th>
+            <th style="width:14%">班主任</th><th style="width:14%">数学老师</th>
+            <th style="width:12%">班额</th><th style="width:12%">信息日期</th><th style="width:8%">来源</th>
+          </tr>
+        </thead>
+        <tbody id="tmpl-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-h"><div><h2>数据来源 · 口径 · 置信度</h2><div class="sub">逐项可追溯</div></div></div>
+    <div class="src-list">
+      <p><b>A 级（官方文件，可直接引用）</b></p>
+      <p>· 南山区公办初中学区名录：南山区学位申请系统「初中学区地图」<a href="https://nszs.szns.gov.cn/visitnsgbcyxqdt" target="_blank" rel="noopener">nszs.szns.gov.cn</a> —— 本文档 46 所公办初中的校名与学段以此为准。</p>
+      <p>· 2025 年公办 / 民办普通高中招生计划：深圳市教育局《深圳市2025年公办普通高中学校招生计划表》《…民办普通高中学校招生计划表》附件1 / 附件2（szeb.sz.gov.cn）—— 本文档全部高中招生人数取自该表。</p>
+      <p>· 学校地址与办学信息：深圳政府在线「学校」栏目 <a href="https://www.sz.gov.cn/school/" target="_blank" rel="noopener">sz.gov.cn/school</a>、南山区教育局 2025 年义务教育招生指南。</p>
+      <p style="margin-top:14px"><b>B 级（公开名录 / 学校简介，校名与片区可靠，细节需复核）</b></p>
+      <p>· 民办学校、宝安区新安/西乡片区学校的地址与办学层次，来自公开学校名录与各校招生简章。</p>
+      <p style="margin-top:14px"><b>C 级（本文档推算，仅供量级参考）</b></p>
+      <p>· 全部经纬度为<b>片区级近似坐标</b>（按校址所在街道/片区赋值，误差 ±0.8km），距离在此基础上用 Haversine 公式计算，四舍五入到 0.1km。</p>
+      <p>· 「班额结构推算」按初中 3 个年级、高中 3 个年级、每班 45–50 人折算，属量级估算，<b>不是官方数据</b>。</p>
+      <p style="margin-top:14px"><b>考试制度数据（本版新增，均来自官方文件）</b></p>
+      <p>· 深圳中考分值与新方案：《深圳市教育局关于深化高中阶段学校考试招生制度改革的实施意见》—— 总分 630 分、数学 100 分 / 90 分钟、2026 年起适用于 2023 年秋季入学的七年级（<a href="https://szeb.sz.gov.cn/home/gfxwj/content/post_11245004.html" target="_blank" rel="noopener">szeb.sz.gov.cn</a>）。</p>
+      <p>· 中考日程：《2026 年深圳市高中阶段学校考生报考指导手册》—— 6 月 26–28 日，数学 6 月 27 日 9:00–10:30（<a href="https://szeb.sz.gov.cn/attachment/1/1726/1726104/12800386.pdf" target="_blank" rel="noopener">PDF</a>）。</p>
+      <p>· 高考数学卷结构：2026 年新高考 I 卷考后复盘（19 题制，8 单选 + 3 多选 + 3 填空 + 5 解答，解答题 15–19 分别为立体几何、三角、概率统计、圆锥曲线、导数）。题型逐年微调，以当年考试说明为准。</p>
+      <p style="margin-top:14px"><b>联系方式与官网</b></p>
+      <p>· 31 所学校的办公电话来自公开学校名录（chahaoba 学校库、深圳本地宝升学、各校招生简章），属公开对外电话，仅建议用于招生政策咨询。</p>
+      <p>· 仅华侨城高级中学、北师大南山附属学校收录到确认官网域名；其余学校的官网域名（多为 <code>xxx.szns.edu.cn</code> / 区级政府域名）未逐校核实，故统一用搜索直达，避免给出失效链接。</p>
+      <p style="margin-top:14px"><b>明确未纳入／无法提供</b></p>
+      <p>· 各班班主任、各科任教师姓名与联系方式：无公开数据源，不在本文档范围内。</p>
+      <p>· 各校分班名单、重点班设置、教师学历构成：非公开信息。</p>
+      <p>· 福田区、罗湖区学校：均超出 10km（车公庙 10.2km、香蜜湖 10.3km、福田 CBD 约 14.8km），已排除。</p>
+      <p>· 小学：按需求仅统计初高中；九年一贯制学校只计入其初中部。</p>
+    </div>
+  </section>
+
+  <footer>
+    数据整理时间：2026-10-23 ｜ 招生数据口径：2025 年秋季 ｜ 距离基准：地铁 1 号线大新站
+    <br>本页为统计与结构分析工具，具体招生政策、学区划分与分班安排以各区教育局及学校当年公告为准。
+  </footer>
+</div>
+
+<script src="data.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
