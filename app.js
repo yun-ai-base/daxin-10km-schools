@@ -282,7 +282,7 @@
         <tr data-id="${s.id}" class="${open ? "open" : ""}">
           <td><div class="sname"><span class="dot" style="background:${segColor[s.seg]}"></span>${s.short}
             <a class="ext" href="${linkOf(s)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
-               title="${s.web ? "打开官网" : "搜索该校官网 / 招生信息"}">↗</a>
+               title="${s.web ? "打开官网" : "搜索该校官网 / 招生信息（多数区属官网域名已下线）"}">↗</a>
             <small>${s.group.replace("深圳市", "").replace("（集团）", "")}</small></div></td>
           <td><span class="pill ${segClass[s.seg]}">${s.seg}</span></td>
           <td><span class="pill tb" style="background:${t.color}1a;color:${t.color}">${s.tier} ${t.short}</span></td>
@@ -304,7 +304,7 @@
           <div><b>招生 / 校办电话</b><br>${s.phone ? `<a class="tel" href="tel:${s.phone}">${s.phone}</a>` : '<span class="muted">未收录（见官网）</span>'}</div>
           <div><b>官网 / 资料页</b><br>${s.web
             ? `<a class="wx" href="${s.web}" target="_blank" rel="noopener">${s.web.replace(/^https?:\/\//, "").replace(/\/$/, "")}</a>`
-            : `<a class="wx" href="${linkOf(s)}" target="_blank" rel="noopener">搜索直达 ↗</a> <span class="muted">（未收录独立官网）</span>`}</div>
+            : `<a class="wx" href="${linkOf(s)}" target="_blank" rel="noopener">搜索直达 ↗</a> <span class="muted">（${s.d === "南山区" ? "南山 *.szns.edu.cn 域名已整体下线，无可用官网" : "官网未提供或栏目为空，建议搜索"}）</span>`}</div>
           <div class="full" style="background:${t.color}0d;border-left:3px solid ${t.color};padding:10px 14px;border-radius:8px;margin-top:4px">
             <b style="color:${t.color}">${s.tier} · ${t.name}</b> —— ${t.who}
             <div style="margin-top:6px"><b>数学需求：</b>${t.need}</div>
@@ -502,6 +502,44 @@
       <div class="cal-t">${c.t}</div>
       <div class="cal-d">${c.d}</div>
     </div>`).join("");
+
+  /* ---------------- 师资公开信息索引 ---------------- */
+  const SITES = (typeof SITE_STATUS !== "undefined") ? SITE_STATUS : [];
+  const sBox = document.getElementById("site-status");
+  if (sBox) {
+    sBox.innerHTML = SITES.map(r => `
+      <div class="site-row">
+        <span class="site-dot" style="background:${r.ok ? "#1f9d55" : "#c0392b"}"></span>
+        <div><b>${r.zone}</b> · <code>${r.domain}</code> ${r.ok ? "在线" : "已下线"} —— ${r.detail}</div>
+      </div>`).join("");
+  }
+
+  const TS = (typeof TEACHERS !== "undefined") ? TEACHERS : [];
+  const tCount = document.getElementById("t-count");
+  if (tCount) tCount.textContent = TS.length;
+  const tGrid = document.getElementById("fac-grid");
+  if (tGrid) {
+    const rank = t => t.subj === "数学" ? 0 : (t.subj === "待核" ? 1 : 2);
+    const sorted = TS.slice().sort((a, b) => rank(a) - rank(b) || b.y - a.y);
+    tGrid.innerHTML = sorted.map(t => {
+      const isMath = t.subj === "数学";
+      const tagCls = isMath ? "math" : (t.subj === "待核" ? "pending" : "");
+      return `<div class="fac ${isMath ? "math" : ""}">
+        <div class="fac-h">
+          <span class="fac-name">${t.n}</span>
+          <span class="fac-tag ${tagCls}">${t.subj}</span>
+          <span class="fac-tag">${t.role}</span>
+        </div>
+        <div class="fac-unit">${t.unit}</div>
+        <div class="fac-title">${t.title}</div>
+        ${t.note ? `<div class="fac-title" style="color:#8593a3;margin-top:5px">· ${t.note}</div>` : ""}
+        <div class="fac-foot">
+          <span>${t.src} · ${t.y}</span>
+          <a href="${t.url}" target="_blank" rel="noopener">查看来源 ↗</a>
+        </div>
+      </div>`;
+    }).join("");
+  }
 
   /* ---------------- 采集模板 ---------------- */
   const tmpl = document.getElementById("tmpl-body");
