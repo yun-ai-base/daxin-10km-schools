@@ -1,0 +1,15 @@
+{
+  "name": "大新站 10km 初高中学校统计",
+  "short_name": "大新10km",
+  "description": "以深圳地铁 1 号线大新站为圆心、半径 10 公里的 87 所初高中学校统计看板",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#082f45",
+  "theme_color": "#0b3a53",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "favicon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

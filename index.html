@@ -5,8 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>大新站 10km 半径 · 初高中学校全景统计</title>
 <meta name="description" content="以深圳地铁 1 号线大新站为圆心、半径 10 公里的 87 所初高中学校统计看板：学段/性质/集团/街道/距离五维分布、2025 招生计划、数学补课市场分层与师资公开信息索引。">
-<meta name="theme-color" content="#0f2540">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%230f2540'/><circle cx='32' cy='32' r='18' fill='none' stroke='%2358c2f0' stroke-width='4'/><circle cx='32' cy='32' r='5' fill='%23ffd166'/></svg>">
+<meta name="theme-color" content="#0b3a53">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
 <style>
   :root{
     --bg:#eef1f5;
@@ -394,10 +398,70 @@
     .card{break-inside:avoid;box-shadow:none}
     .filters,.tmpl-toolbar .btn{display:none}
     .table-scroll{max-height:none;overflow:visible}
+    #gate{display:none}
   }
+
+  /* ---------------- 访问密码门禁 ---------------- */
+  body.locked{overflow:hidden}
+  #gate{
+    position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:linear-gradient(140deg,#082f45 0%,#0b3a53 45%,#0f5168 100%);
+  }
+  #gate::after{
+    content:"";position:absolute;right:-160px;top:-160px;width:560px;height:560px;pointer-events:none;
+    background:radial-gradient(circle,rgba(80,190,220,.28),transparent 62%);
+  }
+  .gate-card{
+    position:relative;width:100%;max-width:404px;padding:34px 28px 26px;text-align:center;
+    background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14);border-radius:20px;
+    box-shadow:0 24px 60px -20px rgba(0,0,0,.55);backdrop-filter:blur(6px);
+  }
+  .gate-card .mark{width:56px;height:56px;border-radius:14px;margin:0 auto 16px;display:block;
+    box-shadow:0 8px 20px -8px rgba(0,0,0,.6)}
+  .gate-card h2{font-size:16.5px;font-weight:650;color:#fff;letter-spacing:.2px}
+  .gate-card .gsub{font-size:12.5px;color:rgba(255,255,255,.58);margin-top:7px}
+  .gate-form{display:flex;gap:8px;margin-top:22px}
+  .gate-form input{
+    flex:1;min-width:0;height:44px;border-radius:11px;outline:none;
+    border:1px solid rgba(255,255,255,.20);background:rgba(255,255,255,.08);color:#fff;
+    font-size:16px;letter-spacing:.45em;text-indent:.45em;text-align:center;transition:.18s;
+  }
+  .gate-form input[hidden]{display:none}
+  .gate-form input::placeholder{letter-spacing:0;text-indent:0;font-size:13px;color:rgba(255,255,255,.34)}
+  .gate-form input:focus{border-color:#58c2f0;background:rgba(88,194,240,.12)}
+  .gate-form button{
+    height:44px;padding:0 20px;border:0;border-radius:11px;cursor:pointer;
+    background:#58c2f0;color:#06283a;font-size:14px;font-weight:700;transition:.18s;
+  }
+  .gate-form button:hover{background:#7ad2f7}
+  .gate-form button:active{transform:scale(.97)}
+  .gate-msg{height:18px;margin-top:11px;font-size:12.5px;color:#ff9d9d}
+  .gate-tip{margin-top:14px;font-size:11.5px;color:rgba(255,255,255,.30)}
+  .shake{animation:gate-shake .34s}
+  @keyframes gate-shake{
+    0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}
+    40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}
+  }
+  .lock-link{display:inline-block;margin-top:6px;font-size:11.5px;color:var(--ink-3);text-decoration:none;border-bottom:1px dashed #c3cedb}
+  .lock-link:hover{color:var(--brand-2)}
 </style>
 </head>
-<body>
+<body class="locked">
+
+<div id="gate">
+  <div class="gate-card" id="gate-card">
+    <img class="mark" src="apple-touch-icon.png" alt="" width="56" height="56">
+    <h2>大新站 10km 初高中学校统计</h2>
+    <div class="gsub">内部资料，请输入访问密码</div>
+    <form class="gate-form" id="gate-form" autocomplete="off">
+      <input type="text" name="visitor" value="visitor" autocomplete="username" hidden>
+      <input id="gate-pw" type="password" inputmode="numeric" autocomplete="new-password" maxlength="8" placeholder="访问密码" aria-label="访问密码">
+      <button id="gate-go" type="submit">进入</button>
+    </form>
+    <div class="gate-msg" id="gate-msg"></div>
+    <div class="gate-tip">验证通过后，本设备 30 天内免再次输入</div>
+  </div>
+</div>
 
 <header class="hero">
   <div class="wrap hero-inner">
@@ -723,7 +787,7 @@
       <p>· 高考数学卷结构：2026 年新高考 I 卷考后复盘（19 题制，8 单选 + 3 多选 + 3 填空 + 5 解答，解答题 15–19 分别为立体几何、三角、概率统计、圆锥曲线、导数）。题型逐年微调，以当年考试说明为准。</p>
       <p style="margin-top:14px"><b>联系方式与官网</b></p>
       <p>· 31 所学校的办公电话来自公开学校名录（chahaoba 学校库、深圳本地宝升学、各校招生简章），属公开对外电话，仅建议用于招生政策咨询。</p>
-      <p>· 仅华侨城高级中学、北师大南山附属学校收录到确认官网域名；其余学校的官网域名（多为 <code>xxx.szns.edu.cn</code> / 区级政府域名）未逐校核实，故统一用搜索直达，避免给出失效链接。</p>
+      <p>· 官网统一用搜索直达，不逐校硬链：2026-10-23 实测南山区属校域名 <code>*.szns.edu.cn</code> 已整体下线（DNS 无 A 记录），宝安区仅 3 校站点在线且内容陈旧，硬链只会给出失效链接。</p>
       <p style="margin-top:14px"><b>明确未纳入／无法提供</b></p>
       <p>· 各班班主任、各科任教师姓名与联系方式：无公开数据源，不在本文档范围内。</p>
       <p>· 各校分班名单、重点班设置、教师学历构成：非公开信息。</p>
@@ -735,11 +799,80 @@
   <footer>
     数据整理时间：2026-10-23 ｜ 招生数据口径：2025 年秋季 ｜ 距离基准：地铁 1 号线大新站
     <br>本页为统计与结构分析工具，具体招生政策、学区划分与分班安排以各区教育局及学校当年公告为准。
+    <br><a class="lock-link" id="lock-site" href="#">🔒 锁定本站（清除本机验证）</a>
   </footer>
 </div>
 
-<script src="data.js?v=3"></script>
-<script src="teachers.js?v=3"></script>
-<script src="app.js?v=3"></script>
+<script>
+/* ---------------- 访问门禁：验证通过后才加载数据与渲染脚本 ---------------- */
+(function () {
+  var PW = "9527";
+  var KEY = "daxin10km_gate_v1";
+  var DAY = 864e5;
+  var FILES = ["data.js?v=3", "teachers.js?v=3", "app.js?v=3"];
+
+  var gate = document.getElementById("gate");
+  var card = document.getElementById("gate-card");
+  var input = document.getElementById("gate-pw");
+  var msg = document.getElementById("gate-msg");
+
+  function load(i) {
+    if (i >= FILES.length) return;
+    var s = document.createElement("script");
+    s.src = FILES[i];
+    s.onload = s.onerror = function () { load(i + 1); };
+    document.body.appendChild(s);
+  }
+
+  function open() {
+    document.body.classList.remove("locked");
+    if (!gate) return load(0);
+    gate.style.transition = "opacity .3s";
+    gate.style.opacity = "0";
+    setTimeout(function () { gate.remove(); gate = null; }, 320);
+    load(0);
+  }
+
+  function saved() {
+    try {
+      var v = JSON.parse(localStorage.getItem(KEY) || "null");
+      return v && v.ok === true && Date.now() < v.exp;
+    } catch (e) { return false; }
+  }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify({ ok: true, exp: Date.now() + 30 * DAY })); } catch (e) {}
+  }
+
+  function fail(text) {
+    msg.textContent = text;
+    card.classList.remove("shake");
+    void card.offsetWidth;
+    card.classList.add("shake");
+    input.value = "";
+    input.focus();
+  }
+
+  function submit() {
+    var v = (input.value || "").trim();
+    if (!v) return fail("请输入密码");
+    if (v === PW) { save(); msg.textContent = ""; open(); }
+    else fail("密码不正确，请重新输入");
+  }
+
+  var form = document.getElementById("gate-form");
+  if (form) form.addEventListener("submit", function (e) { e.preventDefault(); submit(); });
+  if (input && !saved()) setTimeout(function () { try { input.focus(); } catch (e) {} }, 60);
+
+  if (saved()) open();
+
+  var lock = document.getElementById("lock-site");
+  if (lock) lock.addEventListener("click", function (e) {
+    e.preventDefault();
+    try { localStorage.removeItem(KEY); } catch (err) {}
+    location.reload();
+  });
+})();
+</script>
 </body>
 </html>
